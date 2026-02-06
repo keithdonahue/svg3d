@@ -1,0 +1,9 @@
+/**
+ * SVG3D - Lightweight 3D library with SVG rendering and easy JS shaders
+ * @see https://github.com/your-repo/svg3d
+ */
+
+export { Vec3, Mat4, Quaternion, Euler } from './math.js';
+export { Object3D, Scene, Camera, Mesh, BufferGeometry, createAttribute, Material, Shaders } from './core.js';
+export { Geometries } from './geometries.js';
+export { SVGRenderer } from './SVGRenderer.js';

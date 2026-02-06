@@ -1,0 +1,13 @@
+{
+  "name": "svg3d",
+  "version": "0.1.0",
+  "description": "Lightweight 3D library for JavaScript with SVG rendering and easy JS shaders",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "demo": "node server.js"
+  },
+  "keywords": ["3d", "svg", "shader", "lightweight", "web"],
+  "author": "",
+  "license": "MIT"
+}
