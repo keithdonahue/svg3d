@@ -2,6 +2,16 @@
 
 A **super light** 3D library for JavaScript, similar to three.js, that renders to **SVG** and supports **easy custom shaders** as plain JavaScript functions.
 
+## Get it from GitHub
+
+```bash
+git clone https://github.com/YOUR_USERNAME/svg3d.git
+cd svg3d
+npm run demo
+```
+
+Then open **http://localhost:5555/demo/** in your browser. Works on Windows, Mac, and Linux.
+
 - **No WebGL** — pure SVG output (scalable, styleable, small bundle)
 - **Shaders in JS** — pass a function `(vertex) => color` instead of GLSL
 - **Familiar API** — Scene, Camera, Mesh, BufferGeometry, Material
