@@ -1,6 +1,9 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+import http from 'http';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const port = 5555;
 const mime = {
@@ -12,8 +15,8 @@ const mime = {
 };
 
 const server = http.createServer((req, res) => {
-  let file = req.url === '/' ? '/demo/index.html' : req.url;
-  file = path.join(__dirname, file.split('?')[0]);
+  let file = req.url === '/' ? 'demo/index.html' : req.url.split('?')[0].replace(/^\//, '');
+  file = path.join(__dirname, file);
   fs.readFile(file, (err, data) => {
     if (err) {
       res.writeHead(404);
@@ -27,5 +30,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, () => {
-  console.log('SVG3D demo: http://localhost:' + port + '/demo/');
+  console.log('SVG3D demo: http://localhost:' + port + '/');
 });

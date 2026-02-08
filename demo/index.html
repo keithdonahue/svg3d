@@ -6,16 +6,16 @@
   <title>SVG3D Demo</title>
   <style>
     * { margin: 0; box-sizing: border-box; }
-    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1a1a2e; }
+    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1a1a2e; gap: 0.5rem; }
     #container { border-radius: 8px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-    h1 { color: #eee; font-family: system-ui; font-size: 1.25rem; margin-bottom: 0.5rem; }
+    h1 { color: #eee; font-family: system-ui; font-size: 1.25rem; }
   </style>
 </head>
 <body>
-  <h1>SVG3D — 3D in SVG with JS shaders</h1>
+  <h1>SVG3D — 3D in SVG with JS shaders &amp; plugins</h1>
   <div id="container"></div>
   <script type="module">
-    import { Scene, Camera, Mesh, Material, Shaders, Geometries, SVGRenderer } from '../src/index.js';
+    import { Scene, Camera, Mesh, Material, Shaders, Geometries, SVGRenderer, Euler, grain, noise, marble } from '/src/index.js';
 
     const width = 520;
     const height = 400;
@@ -27,37 +27,29 @@
     camera.position.set(0, 0, 5);
     camera.lookAt(0, 0, 0);
 
-    // Box with built-in diffuse shader
+    // Box: diffuse + film grain
     const boxGeo = Geometries.box(1, 1, 1);
     const boxMat = new Material({
       color: '#e07a5f',
-      shader: Shaders.diffuse('#e07a5f')
+      shader: grain(Shaders.diffuse('#e07a5f'), 0.12, 100)
     });
     const box = new Mesh(boxGeo, boxMat);
     box.position.set(-1.2, 0, 0);
     scene.add(box);
 
-    // Sphere with custom shader (normal-based color)
+    // Sphere: diffuse + noise
     const sphereGeo = Geometries.sphere(0.6, 16, 12);
     const sphereMat = new Material({
-      shader: (v) => {
-        const n = v.normal;
-        const d = Math.max(0, n.z);
-        const r = (0.5 + 0.5 * n.x) * 255 | 0;
-        const g = (0.5 + 0.5 * d) * 255 | 0;
-        const b = 200;
-        return `rgb(${r},${g},${b})`;
-      }
+      shader: noise(Shaders.diffuse('#6c9bcf'), 0.25, 4)
     });
     const sphere = new Mesh(sphereGeo, sphereMat);
     sphere.position.set(0, 0, 0);
     scene.add(sphere);
 
-    // Tetrahedron with flat color
+    // Tetrahedron: marble texture
     const tetGeo = Geometries.tetrahedron(0.55);
     const tetMat = new Material({
-      color: '#81b29a',
-      shader: Shaders.diffuse('#81b29a')
+      shader: marble(Shaders.diffuse('#81b29a'), '#e8e0d5', 3)
     });
     const tet = new Mesh(tetGeo, tetMat);
     tet.position.set(1.2, 0, 0);
@@ -66,9 +58,9 @@
     let t = 0;
     function animate() {
       t += 0.01;
-      box.quaternion.setFromEuler({ x: 0, y: t * 0.5, z: t * 0.3 });
-      sphere.quaternion.setFromEuler({ x: t * 0.2, y: t * 0.7, z: 0 });
-      tet.quaternion.setFromEuler({ x: t * 0.4, y: 0, z: t * 0.5 });
+      box.quaternion.setFromEuler(new Euler(0, t * 0.5, t * 0.3));
+      sphere.quaternion.setFromEuler(new Euler(t * 0.2, t * 0.7, 0));
+      tet.quaternion.setFromEuler(new Euler(t * 0.4, 0, t * 0.5));
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     }

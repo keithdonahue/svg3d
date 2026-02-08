@@ -10,7 +10,7 @@ cd svg3d
 npm run demo
 ```
 
-Then open **http://localhost:5555/demo/** in your browser. Works on Windows, Mac, and Linux.
+Then open **http://localhost:5555/** in your browser. Works on Windows, Mac, and Linux.
 
 - **No WebGL** — pure SVG output (scalable, styleable, small bundle)
 - **Shaders in JS** — pass a function `(vertex) => color` instead of GLSL
@@ -72,6 +72,29 @@ Shaders.vertexColor()             // use geometry vertex colors
 Shaders.uv()                     // debug: UV as RGB
 ```
 
+### Shader plugins (noise, grain, textures)
+
+Composable modifiers that wrap any base shader:
+
+```javascript
+import { grain, noise, stripes, checker, marble } from './src/index.js';
+
+// Film grain
+shader: grain(Shaders.diffuse('#e07a5f'), 0.12, 100)
+
+// 3D noise
+shader: noise(Shaders.diffuse('#6c9bcf'), 0.25, 4)
+
+// Procedural stripes (UV-based)
+shader: stripes(Shaders.diffuse('#fff'), '#333', 8)
+
+// Checkerboard
+shader: checker(Shaders.diffuse('#fff'), '#222', 4)
+
+// Marble veins
+shader: marble(Shaders.diffuse('#81b29a'), '#e8e0d5', 3)
+```
+
 ### Custom shader
 
 ```javascript
@@ -103,7 +126,7 @@ From the repo root:
 npm run demo
 ```
 
-Then open `http://localhost:5555/demo/`.
+Then open `http://localhost:5555/`.
 
 ## Size
 
