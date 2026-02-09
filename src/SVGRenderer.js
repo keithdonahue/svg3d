@@ -175,6 +175,21 @@ export class SVGRenderer {
     const worldPos = outVec.clone().applyMatrix4(modelWorld);
     const clip = outVec.clone().applyMatrix4(viewProj);
     const ndcX = clip.x, ndcY = clip.y, ndcZ = clip.z;
+    // Guard against invalid clip coordinates (can happen when w ~ 0)
+    if (!Number.isFinite(ndcX) || !Number.isFinite(ndcY) || !Number.isFinite(ndcZ)) {
+      return {
+        x: 0,
+        y: 0,
+        z: 0,
+        behind: true,
+        vertex: {
+          position: worldPos,
+          normal: null,
+          uv: null,
+          color: null
+        }
+      };
+    }
     const behind = ndcZ < -1 || ndcZ > 1;
     const sx = this.halfWidth + ndcX * this.halfWidth;
     const sy = this.halfHeight - ndcY * this.halfHeight;
