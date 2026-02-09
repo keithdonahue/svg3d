@@ -16,7 +16,7 @@
   <h1>SVG3D — Drag to rotate cube</h1>
   <div id="container"></div>
   <script type="module">
-    import { Scene, Camera, Mesh, Material, Shaders, Geometries, SVGRenderer, Euler } from '../../src/index.js';
+    import { Scene, Camera, Mesh, Material, Shaders, Geometries, SVGRenderer, Euler, frameObject } from '../../src/index.js';
 
     const width = 500;
     const height = 500;
@@ -26,8 +26,6 @@
 
     const scene = new Scene();
     const camera = new Camera(50, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 6);
-    camera.lookAt(0, 0, 0);
 
     const geo = Geometries.box(1.5, 1.5, 1.5);
     const mat = new Material({
@@ -37,6 +35,9 @@
     const mesh = new Mesh(geo, mat);
     mesh.position.set(0, 0, 0);
     scene.add(mesh);
+
+    // Frame the object to take up 1/4 of viewport
+    frameObject(camera, width, height, geo, 0.25);
 
     let mouseDown = false;
     let mouseX = 0, mouseY = 0;

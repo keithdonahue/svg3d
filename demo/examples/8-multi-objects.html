@@ -15,7 +15,7 @@
   <h1>SVG3D — Multiple objects</h1>
   <div id="container"></div>
   <script type="module">
-    import { Scene, Camera, Mesh, Material, Shaders, Geometries, SVGRenderer, Euler } from '../../src/index.js';
+    import { Scene, Camera, Mesh, Material, Shaders, Geometries, SVGRenderer, Euler, frameObject } from '../../src/index.js';
 
     const width = 500;
     const height = 500;
@@ -24,8 +24,6 @@
 
     const scene = new Scene();
     const camera = new Camera(50, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 7);
-    camera.lookAt(0, 0, 0);
 
     const box = new Mesh(
       Geometries.box(0.6, 0.6, 0.6),
@@ -47,6 +45,9 @@
     );
     tet.position.set(1.2, 0, 0);
     scene.add(tet);
+
+    // Frame all objects - approximate size spans from -1.2 to 1.2 (2.4) plus object size (~0.6) = ~3.0
+    frameObject(camera, width, height, 3.0, 0.25);
 
     let t = 0;
     function animate() {
