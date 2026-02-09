@@ -24,7 +24,7 @@
 
     const scene = new Scene();
     const camera = new Camera(50, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 5);
+    camera.position.set(0, 0, 6);
     camera.lookAt(0, 0, 0);
 
     const geo = Geometries.tetrahedron(1);
@@ -32,6 +32,7 @@
       shader: marble(Shaders.diffuse('#81b29a'), '#e8e0d5', 3)
     });
     const mesh = new Mesh(geo, mat);
+    mesh.position.set(0, 0, 0);
     scene.add(mesh);
 
     let t = 0;
