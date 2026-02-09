@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SVG3D — Cube Auto</title>
+  <style>
+    * { margin: 0; box-sizing: border-box; }
+    body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1a1a2e; }
+    #container { border-radius: 8px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    h1 { color: #eee; font-family: system-ui; font-size: 1rem; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>SVG3D — Auto-rotating cube</h1>
+  <div id="container"></div>
+  <script type="module">
+    import { Scene, Camera, Mesh, Material, Shaders, Geometries, SVGRenderer, Euler } from '../../src/index.js';
+
+    const width = 500;
+    const height = 500;
+    const renderer = new SVGRenderer({ width, height, clearColor: '#1a1a2e' });
+    document.getElementById('container').appendChild(renderer.domElement);
+
+    const scene = new Scene();
+    const camera = new Camera(50, width / height, 0.1, 1000);
+    camera.position.set(0, 0, 5);
+    camera.lookAt(0, 0, 0);
+
+    const geo = Geometries.box(1.5, 1.5, 1.5);
+    const mat = new Material({
+      color: '#81b29a',
+      shader: Shaders.diffuse('#81b29a')
+    });
+    const mesh = new Mesh(geo, mat);
+    scene.add(mesh);
+
+    let t = 0;
+    function animate() {
+      t += 0.01;
+      mesh.quaternion.setFromEuler(new Euler(t * 0.5, t * 0.7, t * 0.3));
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>

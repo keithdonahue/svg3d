@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SVG3D Examples</title>
+  <style>
+    * { margin: 0; box-sizing: border-box; }
+    body { min-height: 100vh; background: #1a1a2e; padding: 2rem; font-family: system-ui; }
+    h1 { color: #eee; margin-bottom: 1.5rem; }
+    .examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    a { display: block; padding: 1rem; background: #2a2a3e; border-radius: 8px; color: #eee; text-decoration: none; transition: background 0.2s; }
+    a:hover { background: #3a3a4e; }
+    a h2 { margin-bottom: 0.5rem; font-size: 1rem; }
+    a p { font-size: 0.875rem; color: #aaa; }
+  </style>
+</head>
+<body>
+  <h1>SVG3D Examples</h1>
+  <div class="examples">
+    <a href="1-cube-auto.html">
+      <h2>1. Auto-rotating Cube</h2>
+      <p>Simple rotating cube with diffuse lighting</p>
+    </a>
+    <a href="2-cube-mouse.html">
+      <h2>2. Mouse-controlled Cube</h2>
+      <p>Drag to rotate the cube</p>
+    </a>
+    <a href="3-cube-wireframe.html">
+      <h2>3. Wireframe Cube</h2>
+      <p>Cube rendered as wireframe</p>
+    </a>
+    <a href="4-sphere-basic.html">
+      <h2>4. Basic Sphere</h2>
+      <p>Simple sphere with diffuse shader</p>
+    </a>
+    <a href="5-sphere-noise.html">
+      <h2>5. Sphere with Noise</h2>
+      <p>Sphere with 3D noise texture</p>
+    </a>
+    <a href="6-plane-checker.html">
+      <h2>6. Checkerboard Plane</h2>
+      <p>Plane with checkerboard pattern</p>
+    </a>
+    <a href="7-tetra-marble.html">
+      <h2>7. Marble Tetrahedron</h2>
+      <p>Tetrahedron with marble texture</p>
+    </a>
+    <a href="8-multi-objects.html">
+      <h2>8. Multiple Objects</h2>
+      <p>Scene with multiple rotating objects</p>
+    </a>
+    <a href="9-uv-debug.html">
+      <h2>9. UV Debug</h2>
+      <p>Sphere showing UV coordinates</p>
+    </a>
+    <a href="10-box-grain.html">
+      <h2>10. Box with Grain</h2>
+      <p>Cube with film grain effect</p>
+    </a>
+  </div>
+</body>
+</html>
