@@ -1,0 +1,19 @@
+{
+  "name": "auth-app-backend",
+  "version": "1.0.0",
+  "description": "Login/register API with session cookies and password hashing",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.6.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1"
+  }
+}
