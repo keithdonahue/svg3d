@@ -41,8 +41,15 @@ App runs at **http://localhost:5173**. The Vite dev server proxies `/api` to the
 3. **Dashboard** → React calls `GET /api/me` with `credentials: 'include'` → server reads session cookie → returns current user or `null`.
 4. **Logout** → `POST /api/logout` destroys session and clears cookie.
 
-## Production notes
+## Production
 
-- Set `SESSION_SECRET` to a long random string.
-- Use HTTPS and set `cookie.secure: true` (already conditional on `NODE_ENV=production`).
-- Replace SQLite with PostgreSQL/MySQL if you need multi-process or scale.
+1. **Environment variables** (see `backend/.env.example`):
+   - **SESSION_SECRET** (required in prod) – Long random string. The server **exits** if `NODE_ENV=production` and this is unset or still the default.
+   - **CORS_ORIGIN** – Your frontend URL (e.g. `https://yourapp.com`). Defaults to `http://localhost:5173` for dev.
+   - **BCRYPT_ROUNDS** (optional) – Bcrypt cost, 10–12. Default 10.
+
+2. **HTTPS** – Use HTTPS in production. Cookies use `secure: true` when `NODE_ENV=production`.
+
+3. **Rate limiting** – Login: 10 attempts per 15 min per IP. Register: 5 per hour per IP. Reduces brute force and abuse.
+
+4. **Database** – SQLite is fine for single-server; use PostgreSQL/MySQL for multi-process or scale.

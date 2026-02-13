@@ -2,20 +2,30 @@ import express from 'express';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import bcrypt from 'bcryptjs';
 import db from './db.js';
+
+const isProd = process.env.NODE_ENV === 'production';
+const SESSION_SECRET = process.env.SESSION_SECRET || 'change-me-in-production';
+if (isProd && SESSION_SECRET === 'change-me-in-production') {
+  console.error('Set SESSION_SECRET in production. Exiting.');
+  process.exit(1);
+}
+
+const BCRYPT_ROUNDS = Math.min(12, Math.max(10, parseInt(process.env.BCRYPT_ROUNDS || '10', 10)));
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Trust first proxy if behind one (e.g. in production)
 app.set('trust proxy', 1);
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: 'http://localhost:5173', // Vite dev server
+    origin: CORS_ORIGIN,
     credentials: true,
   })
 );
@@ -23,17 +33,36 @@ app.use(
 app.use(
   session({
     name: 'auth.sid',
-    secret: process.env.SESSION_SECRET || 'change-me-in-production',
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProd,
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 24 * 60 * 60 * 1000,
     },
   })
 );
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({ error: 'Too many login attempts. Try again in 15 minutes.' });
+  },
+});
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({ error: 'Too many registrations. Try again later.' });
+  },
+});
 
 // --- Auth helpers ---
 function getUserId(req) {
@@ -57,7 +86,7 @@ app.get('/api/me', (req, res) => {
 });
 
 // Register
-app.post('/api/register', (req, res) => {
+app.post('/api/register', registerLimiter, (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password required' });
@@ -65,7 +94,7 @@ app.post('/api/register', (req, res) => {
   if (password.length < 6) {
     return res.status(400).json({ error: 'Password must be at least 6 characters' });
   }
-  const password_hash = bcrypt.hashSync(password, 10);
+  const password_hash = bcrypt.hashSync(password, BCRYPT_ROUNDS);
   try {
     const result = db.prepare('INSERT INTO users (email, password_hash) VALUES (?, ?)').run(email.trim().toLowerCase(), password_hash);
     const user = db.prepare('SELECT id, email, created_at FROM users WHERE id = ?').get(result.lastInsertRowid);
@@ -80,7 +109,7 @@ app.post('/api/register', (req, res) => {
 });
 
 // Login
-app.post('/api/login', (req, res) => {
+app.post('/api/login', loginLimiter, (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password required' });
