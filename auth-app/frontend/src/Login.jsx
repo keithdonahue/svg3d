@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE } from './api';
 
 export default function Login({ onLogin, fetchOptions }) {
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ export default function Login({ onLogin, fetchOptions }) {
     e.preventDefault();
     setError('');
     setSubmitting(true);
-    fetch('/api/login', {
+    fetch(API_BASE + '/api/login', {
       method: 'POST',
       ...fetchOptions,
       body: JSON.stringify({ email, password }),

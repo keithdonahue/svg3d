@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE } from './api';
 
 export default function Register({ onRegister, fetchOptions }) {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ export default function Register({ onRegister, fetchOptions }) {
       return;
     }
     setSubmitting(true);
-    fetch('/api/register', {
+    fetch(API_BASE + '/api/register', {
       method: 'POST',
       ...fetchOptions,
       body: JSON.stringify({ email, password }),

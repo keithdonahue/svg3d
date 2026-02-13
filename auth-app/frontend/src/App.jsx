@@ -3,8 +3,9 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
 import Dashboard from './Dashboard';
+import { API_BASE } from './api';
 
-const API = '/api';
+const API = API_BASE + '/api';
 
 export default function App() {
   const [user, setUser] = useState(null);

@@ -1,0 +1,34 @@
+# Render Blueprint (free tier)
+# Deploy: connect this repo at render.com → New → Blueprint → link repo, then set env vars below.
+# Docs: https://docs.render.com/blueprint-spec
+
+services:
+  # Backend API (Node)
+  - type: web
+    name: auth-app-api
+    runtime: node
+    plan: free
+    rootDir: auth-app/backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
+        # Set to your frontend URL after first deploy, e.g. https://auth-app.onrender.com
+
+  # Frontend (static React)
+  - type: web
+    name: auth-app
+    runtime: static
+    plan: free
+    rootDir: auth-app/frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+        # Set to your backend URL, e.g. https://auth-app-api.onrender.com

@@ -53,3 +53,13 @@ App runs at **http://localhost:5173**. The Vite dev server proxies `/api` to the
 3. **Rate limiting** – Login: 10 attempts per 15 min per IP. Register: 5 per hour per IP. Reduces brute force and abuse.
 
 4. **Database** – SQLite is fine for single-server; use PostgreSQL/MySQL for multi-process or scale.
+
+## Deploy free (Render)
+
+A **render.yaml** Blueprint is at the repo root (`render.yaml`). It defines two free services: backend API and static frontend.
+
+1. Go to [render.com](https://render.com) → **New** → **Blueprint** → connect your GitHub repo (this repo).
+2. Render will create **auth-app-api** (backend) and **auth-app** (frontend). Set env vars:
+   - **auth-app-api**: `CORS_ORIGIN` = your frontend URL (e.g. `https://auth-app.onrender.com`). `SESSION_SECRET` is auto-generated.
+   - **auth-app**: `VITE_API_URL` = your backend URL (e.g. `https://auth-app-api.onrender.com`).
+3. Deploy. Free tier may spin down after inactivity (cold start on first request).
